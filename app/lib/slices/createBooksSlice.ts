@@ -16,14 +16,18 @@ export interface Book {
 }
 
 export interface BooksSlice {
-    books: Book[];
+    popularBooks: any[];
+    bookDetail: any | null;
     fetchPopularBooks: () => void;
+    setBookDetail: (book: any) => void;
 }
 
 export const createBooksSlice: StateCreator<BooksSlice> = (set) => ({
-    books: [],
+    popularBooks: [],
+    bookDetail: null,
+    setBookDetail: (book: any) => set({ bookDetail: book }),
     fetchPopularBooks: async () => {
         const res = await axios.get('https://openlibrary.org/trending/daily.json')
-        set({ books: res.data })
+        set({ popularBooks: res.data })
     },
 })

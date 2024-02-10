@@ -4,77 +4,55 @@ import Link from "next/link";
 import { CardContent, Card } from "@/components/ui/card";
 import { getPopularBooks } from "@/app/lib/data";
 import BookSkeleton from "@/app/ui/skeletons";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
+import { useRouter } from 'next/navigation'
+import { useAppStore } from "@/app/lib/store";
+interface PopularBooks {
+  bookLimit?: number;
+}
 
-export default function PopularBooks() {
-  const { books, isLoading, isError } = getPopularBooks();
+export default function PopularBooks({bookLimit}: PopularBooks) {
+  const { popularBooks, isLoading, isError } = getPopularBooks(bookLimit);
+  const setBookDetail = useAppStore((state) => state.setBookDetail);
+  const router = useRouter();
 
-  // if (isLoading) return <BookSkeleton />;
+  console.log(popularBooks);
+
+  const onClickBook = (book: any) => {
+    setBookDetail(book);
+    router.push(`/book-detail/${book?.title}`);
+  }
 
   return (
-    <section>
+    <>
       <h2 className="text-2xl font-bold">Popular Books</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-4">
         {isLoading ? (
           <BookSkeleton />
         ) : (
-          books?.map((book: any, index: number) => {
-            // const cover = getBookCover(book?.cover_edition_key);
+          popularBooks?.map((book: any, index: number) => {
             return (
-            <Card key={index}>
-              <CardContent>
-                <Image
-                  alt="Book cover"
-                  height="200"
-                  src={`https://covers.openlibrary.org/b/olid/${book?.cover_edition_key}-S.jpg`}
-                  style={{
-                    aspectRatio: "150/200",
-                    objectFit: "cover",
-                  }}
-                  width="150"
-                  placeholder="blur"
-                  blurDataURL="iVBORw0KGgoAAAANSUhEUgAAAJYAAADICAYAAAAKhRhlAAABeUlEQVR42u3SsREAAAQAMRbXmZslFIpkhL/Pqp6AY2ksjIWxMJaxMBbGwlhgLIyFscBYGAtjgbEwFsYCY2EsjAXGwlgYC4yFsTAWGAtjYSwwFsbCWGAsjIWxwFgYC2OBsTAWxgJjYSyMBcbCWBgLjIWxMBYYC2NhLDAWxsJYYCyMhbHAWBgLY4GxMBbGAmNhLIwFxsJYGAuMhbEwFhgLY2EsMBbGwlhgLIyFscBYGAtjgbEwFsbCWMbCWBgLY4GxMBbGAmNhLIwFxsJYGAuMhbEwFhgLY2EsMBbGwlhgLIyFscBYGAtjgbEwFsYCY2EsjAXGwlgYC4yFsTAWGAtjYSwwFsbCWGAsjIWxwFgYC2OBsTAWxgJjYSyMBcbCWBgLjIWxMBYYC2NhLDAWxsJYYCyMhbHAWBgLY4GxMBbGAmNhLIwFxsJYGAtjGQtjYSyMJQPGwlgYC4yFsTAWGAtjYSwwFsbCWGAsjIWxwFgYC2OBsTAWxgJj8c0Cc/P02DlNXsoAAAAASUVORK5CYII="
-                />
-                <h3 className="mt-2 text-lg font-semibold">{book?.title}</h3>
-              </CardContent>
-            </Card>
-          )})
+                <Card key={index} className="max-w-48 max-h-80" onClick={() => onClickBook(book)}>
+                  <CardContent className="flex flex-col items-center">
+                    <Image
+                      alt="Book cover"
+                      height="200"
+                      src={`https://covers.openlibrary.org/b/olid/${book?.cover_edition_key}-L.jpg`}
+                      style={{
+                        aspectRatio: "150/200",
+                        objectFit: "contain",
+                      }}
+                      width="150"
+                    />
+                    <h3 className="mt-2 text-lg font-semibold">
+                      {book?.title}
+                    </h3>
+                  </CardContent>
+                </Card>
+            );
+          })
         )}
-        {/* <Card>
-              <CardContent>
-                <img
-                  alt="Book cover"
-                  height="200"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "150/200",
-                    objectFit: "cover",
-                  }}
-                  width="150"
-                />
-                <h3 className="mt-2 text-lg font-semibold">Book Title</h3>
-                <p className="text-gray-500">Author Name</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent>
-                <img
-                  alt="Book cover"
-                  height="200"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "150/200",
-                    objectFit: "cover",
-                  }}
-                  width="150"
-                />
-                <h3 className="mt-2 text-lg font-semibold">Book Title</h3>
-                <p className="text-gray-500">Author Name</p>
-              </CardContent>
-            </Card> */}
       </div>
-    </section>
+    </>
   );
 }

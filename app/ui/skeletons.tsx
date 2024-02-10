@@ -1,27 +1,24 @@
+import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 import ContentLoader from "react-content-loader";
+import Image from "next/image";
 
-// make this component with an array of length four
-// and map over it to create a skeleton for each item in the array
-//
 const BooksSkeleton = (props: any) => (
   <>
-    {Array.from({ length: 4 }, (_, index) => (
-      // <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+    {Array.from({ length: 6 }, (_, index) => (
       <ContentLoader
-        key={index}
         speed={2}
-        width={430}
-        height={262}
-        viewBox="0 0 150 160"
+        width={192}
+        height={320}
+        viewBox="0 0 200 320"
         backgroundColor="#f3f3f3"
         foregroundColor="#c0c0c0"
+        {...props}
       >
-        <rect x="29" y="14" rx="0" ry="0" width="90" height="103" />
-        <rect x="29" y="122" rx="0" ry="0" width="88" height="14" />
-        <rect x="29" y="141" rx="0" ry="0" width="62" height="14" />
+        <rect x="4" y="285" rx="4" ry="4" width="152" height="12" />
+        <rect x="4" y="305" rx="4" ry="4" width="122" height="12" />
+        <rect x="4" y="1" rx="4" ry="4" width="192" height="274" />
       </ContentLoader>
-      // </div>
     ))}
   </>
 );
