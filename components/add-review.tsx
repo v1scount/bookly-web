@@ -15,6 +15,8 @@ import { Rate, Input, Button, Typography } from "antd";
 import { usePathname } from 'next/navigation'
 import {yupResolver} from '@hookform/resolvers/yup'
 import { ReviewSchema, ReviewSchemaType, AddReviewProps } from "@/types/reviews";
+const isDarkModeEnabled = window.matchMedia('(prefers-color-scheme: dark)').matches;
+import withTheme from "@/theme";
 
 const { TextArea } = Input;
 const { Text, Link, Title } = Typography;
@@ -29,7 +31,6 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
     formState: { errors },
   } = useForm<ReviewSchemaType>({resolver: yupResolver(ReviewSchema) });
 
-  console.log('errors', errors)
   const onSubmit: SubmitHandler<ReviewSchemaType> = (data:any) => {
     console.log('createReview', typeof createReview)
     createReview()
@@ -42,7 +43,7 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
     reset();
   }
 
-  return (
+  return withTheme(
     <ReactModal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
@@ -54,7 +55,7 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
           left: "24%",
           top: "16%",
           padding: 0,
-          backgroundColor: "white",
+          backgroundColor: isDarkModeEnabled ? "rgb(3, 7, 18)" : "white",
           border: "none",
         },
       }}
@@ -62,8 +63,8 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
       <Card className="p-0">
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardHeader className="p-6">
-            <Title level={4}>Add a review</Title>
-            <Text type="secondary">Share your thoughts with other readers</Text>
+            <p className="text-2xl">Add a review</p>
+            <p className="text-xl">Share your thoughts with other readers</p>
           </CardHeader>
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
@@ -73,7 +74,6 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
               <Controller
                 name="rating"
                 control={control}
-                // rules={{ required: true }}
                 render={({ field }) => <Rate allowHalf {...field} />}
               />
             </div>
@@ -90,6 +90,7 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
                 render={({ field }) => (
                   <Input
                     id="title"
+                    variant="filled"
                     placeholder="Enter a review title"
                     {...field}
                   />
@@ -106,6 +107,7 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
                 render={({ field }) => (
                   <TextArea
                     className="min-h-[100px]"
+                    variant="filled"
                     id="review"
                     placeholder="Enter your review"
                     {...field}
@@ -123,4 +125,10 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
       </Card>
     </ReactModal>
   );
+}
+
+const styles = {
+  textColor: {
+    color: isDarkModeEnabled ? "white" : "black",
+  }
 }
