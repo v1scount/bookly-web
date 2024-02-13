@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 
 interface HeaderProps {
   user: boolean;
-  signOut?: Function;
 }
 
 const Header = async () => {
@@ -18,11 +17,6 @@ const Header = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const signOut = async () => {
-    "use server";
-    await supabase.auth.signOut();
-    return redirect("/login");
-  };
   return (
     <>
       <div className="w-full h-20 bg-emerald-800 sticky top-0">
@@ -51,7 +45,8 @@ const Header = async () => {
                 </Link>
               </li>
             </ul>
-            {user ? <AuthButton user={user} signOut={signOut} /> : <></>}
+            {/* {!user ? <AuthButton user={user} /> : <></>} */}
+            <AuthButton user={user} />
           </div>
         </div>
       </div>

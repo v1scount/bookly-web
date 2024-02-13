@@ -7,96 +7,122 @@
 
 import { useAppStore } from "@/app/lib/store";
 import { getBookDetails } from "@/app/lib/data";
+import ShowMoreText from "react-show-more-text";
+import React, { useState } from "react";
+import { AddReview } from "./add-review";
+import { createReview } from "@/app/lib/supabase";
 
 export function BookDetail() {
+  const [showMoreDescription, setShowMoreDescription] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
   const bookSelected = useAppStore((state) => state.bookDetail);
   const { bookDetail, isLoading, isError } = getBookDetails(bookSelected?.key);
 
-  console.log("bookSelected", bookSelected);
-  console.log("bookDetail", bookDetail);
   return (
-    <div className="grid md:grid-cols-2 items-start max-w-6xl px-4 mx-auto py-6 gap-6 md:gap-12">
-      <div className="flex flex-col gap-4">
+    <>
+      <div className="grid md:grid-cols-2 items-start max-w-6xl px-4 mx-auto py-6 gap-6 md:gap-12">
+        <div className="flex flex-col gap-4">
+          <div className="grid gap-4">
+            <div className="flex items-start gap-4">
+              <img
+                alt="Book Cover"
+                className="aspect-[3/4] object-cover border border-gray-200 w-[200px] rounded-lg overflow-hidden dark:border-gray-800"
+                height={300}
+                src={`https://covers.openlibrary.org/b/id/${bookDetail?.covers[0]}-L.jpg`}
+                width={200}
+              />
+              <div className="grid gap-1.5">
+                <h1 className="font-bold text-2xl sm:text-3xl">
+                  {bookSelected?.title}
+                </h1>
+                <p className="text-sm text-gray-500">
+                  {bookSelected?.author_name[0]}
+                </p>
+                <div className="flex items-center gap-0.5">
+                  <StarIcon className="w-5 h-5 fill-primary" />
+                  <StarIcon className="w-5 h-5 fill-primary" />
+                  <StarIcon className="w-5 h-5 fill-primary" />
+                  <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                  <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    (3.67 average from 100 reviews)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="grid gap-4">
+            <h2 className="font-bold text-xl">Description</h2>
+            <ShowMoreText
+              /* Default options */
+              lines={3}
+              more="Show more"
+              less="Show less"
+              // className="content-css"
+              anchorClass="show-more-less-clickable"
+              onClick={() => setShowMoreDescription(!showMoreDescription)}
+              expanded={showMoreDescription}
+              width={0}
+              truncatedEndingComponent={"... "}
+            >
+              {bookDetail?.description?.value
+                ? bookDetail?.description?.value
+                : bookDetail?.description}
+            </ShowMoreText>
+          </div>
+          <button className="w-full bg-white text-black border border-gray-300 rounded-lg px-4 py-2" onClick={() => setShowModal(true)}>
+            Add a Review
+          </button>
+        </div>
         <div className="grid gap-4">
-          <div className="flex items-start gap-4">
-            <img
-              alt="Book Cover"
-              className="aspect-[3/4] object-cover border border-gray-200 w-[200px] rounded-lg overflow-hidden dark:border-gray-800"
-              height={300}
-              src={`https://covers.openlibrary.org/b/id/${bookDetail?.covers[0]}-L.jpg`}
-              width={200}
-            />
+          <h2 className="font-bold text-xl">Popular Reviews</h2>
+          <div className="grid gap-4">
             <div className="grid gap-1.5">
-              <h1 className="font-bold text-2xl sm:text-3xl">
-                {bookSelected?.title}
-              </h1>
-              <p className="text-sm text-gray-500">{bookSelected?.author_name[0]}</p>
+              <h3 className="font-bold text-lg">Amanda</h3>
               <div className="flex items-center gap-0.5">
                 <StarIcon className="w-5 h-5 fill-primary" />
                 <StarIcon className="w-5 h-5 fill-primary" />
                 <StarIcon className="w-5 h-5 fill-primary" />
                 <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
                 <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  (3.67 average from 100 reviews)
-                </span>
               </div>
+              <p>
+                I loved the concept of this book. The writing was beautiful and
+                I found myself reflecting on my own life choices. The idea of
+                being able to explore the different paths my life could have
+                taken was both intriguing and thought-provoking. I would
+                definitely recommend this book to anyone who enjoys
+                contemplating the what-ifs in life.
+              </p>
             </div>
-          </div>
-        </div>
-        <div className="grid gap-4">
-          <h2 className="font-bold text-xl">Description</h2>
-          <p>
-            {bookDetail?.description}
-          </p>
-        </div>
-        <button className="w-full bg-white text-black border border-gray-300 rounded-lg px-4 py-2">Add a Review</button>
-      </div>
-      <div className="grid gap-4">
-        <h2 className="font-bold text-xl">Popular Reviews</h2>
-        <div className="grid gap-4">
-          <div className="grid gap-1.5">
-            <h3 className="font-bold text-lg">Amanda</h3>
-            <div className="flex items-center gap-0.5">
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+            <div className="grid gap-1.5">
+              <h3 className="font-bold text-lg">Mark</h3>
+              <div className="flex items-center gap-0.5">
+                <StarIcon className="w-5 h-5 fill-primary" />
+                <StarIcon className="w-5 h-5 fill-primary" />
+                <StarIcon className="w-5 h-5 fill-primary" />
+                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+              </div>
+              <p>
+                The Midnight Library is a captivating and imaginative tale that
+                explores the concept of regret and the infinite possibilities
+                that life offers. The author's prose is both lyrical and
+                introspective, drawing the reader into the world of the
+                protagonist and the myriad lives she encounters within the
+                library. The book raises profound questions about the nature of
+                happiness, the significance of our choices, and the
+                possibilities of redemption. It is a poignant and
+                thought-provoking read that will linger in the mind long after
+                the final page.
+              </p>
             </div>
-            <p>
-              I loved the concept of this book. The writing was beautiful and I
-              found myself reflecting on my own life choices. The idea of being
-              able to explore the different paths my life could have taken was
-              both intriguing and thought-provoking. I would definitely
-              recommend this book to anyone who enjoys contemplating the
-              what-ifs in life.
-            </p>
-          </div>
-          <div className="grid gap-1.5">
-            <h3 className="font-bold text-lg">Mark</h3>
-            <div className="flex items-center gap-0.5">
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-            </div>
-            <p>
-              The Midnight Library is a captivating and imaginative tale that
-              explores the concept of regret and the infinite possibilities that
-              life offers. The author's prose is both lyrical and introspective,
-              drawing the reader into the world of the protagonist and the
-              myriad lives she encounters within the library. The book raises
-              profound questions about the nature of happiness, the significance
-              of our choices, and the possibilities of redemption. It is a
-              poignant and thought-provoking read that will linger in the mind
-              long after the final page.
-            </p>
           </div>
         </div>
       </div>
-    </div>
+      <AddReview isOpen={showModal} onClose={() => setShowModal(false)} createReview={createReview}/>
+    </>
   );
 }
 

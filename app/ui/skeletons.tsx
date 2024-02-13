@@ -7,6 +7,7 @@ const BooksSkeleton = (props: any) => (
   <>
     {Array.from({ length: 6 }, (_, index) => (
       <ContentLoader
+        key={index}
         speed={2}
         width={192}
         height={320}

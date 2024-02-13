@@ -1,10 +1,7 @@
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
-// import {isSupabaseConnected} from "@/app/lib/supabase"
 import Header from "@/components/Header";
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -22,11 +19,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.className}>
+    <html lang="en" className={GeistSans.className} >
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col items-center">
           <Header />
-          <section className="mt-12">{children}</section>
+          <section className="mt-12">
+            <AntdRegistry>{children}</AntdRegistry>
+          </section>
         </main>
       </body>
     </html>

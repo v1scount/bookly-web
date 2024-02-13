@@ -1,8 +1,8 @@
 import Link from "next/link";
-// import {signOut} from "@/app/lib/supabase"
+import {signOut} from "@/app/lib/supabase"
 
 
-export default async function AuthButton({user, signOut} : any) {
+export default async function AuthButton({user} : any) {
 
   return user ? (
     <div className="flex items-center gap-4">

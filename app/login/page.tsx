@@ -15,6 +15,7 @@ export default function Login({
     const password = formData.get("password") as string;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
+    
 
     const { error } = await supabase.auth.signInWithPassword({
       email,

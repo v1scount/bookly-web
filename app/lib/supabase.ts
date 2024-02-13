@@ -1,22 +1,45 @@
-// "use server"
+"use server";
 
-// import { createClient } from "@/utils/supabase/server";
-// import { cookies } from "next/headers";
-// import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-// const cookieStore = cookies();
-// const supabase = createClient(cookieStore);
+export const createReview = async () => {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-// export const isSupabaseConnected = () => {
-//   if (supabase) {
-//     return true;
-//   }
-//   return false
-// };
+  const { data, error } = await supabase
+    .from("reviews")
+    .insert([
+      {
+        user_id: user?.id,
+        title: "locura total",
+        text: "demenciaa",
+        book_id: "alla",
+        rating: 4.5,
+      },
+    ]);
+  // .select()
 
-// export const signOut = async () => {
-//   "use server"
-//   await supabase.auth.signOut();
-//   return redirect("/login");
-// };
+  console.log("SUCEDEEE", error);
+};
+
+export const getBookReviews = async () => {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+};
+
+export const signOut = async () => {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  await supabase.auth.signOut();
+  // return redirect("/login");
+};
