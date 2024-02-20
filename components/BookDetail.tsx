@@ -6,11 +6,19 @@
  */
 
 import { useAppStore } from "@/app/lib/store";
-import { getBookDetails } from "@/app/lib/data";
+import { getBookDetails, getBookRatings } from "@/app/lib/data";
 import ShowMoreText from "react-show-more-text";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AddReview } from "./add-review";
-import { createReview } from "@/app/lib/supabase";
+import { createReview, getBookReviews } from "@/app/lib/supabase/";
+import DescriptionSkeleton from "./ui/skeletons/description-skeleton";
+import RatingsSkeleton from "./ui/skeletons/ratings-skeleton";
+import { Rate } from "antd";
+import { parseRating } from "@/utils/helpers";
+import Review from "@/components/Reviews/Review";
+import BookActions from "./book-actions";
+import { NumberSchema } from "yup";
+import Image from "next/image";
 
 export function BookDetail() {
   const [showMoreDescription, setShowMoreDescription] = useState(false);
@@ -18,129 +26,66 @@ export function BookDetail() {
 
   const bookSelected = useAppStore((state) => state.bookDetail);
   const { bookDetail, isLoading, isError } = getBookDetails(bookSelected?.key);
+  const { bookRatings, isErrorRatings, isLoadingRatings } = getBookRatings(
+    bookSelected?.key.split("/").pop()
+  );
+
+  console.log("bookDetail?", bookSelected);
 
   return (
     <>
-      <div className="grid md:grid-cols-2 items-start max-w-6xl px-4 mx-auto py-6 gap-6 md:gap-12">
-        <div className="flex flex-col gap-4">
-          <div className="grid gap-4">
-            <div className="flex items-start gap-4">
-              <img
-                alt="Book Cover"
-                className="aspect-[3/4] object-cover border border-gray-200 w-[200px] rounded-lg overflow-hidden dark:border-gray-800"
-                height={300}
-                src={`https://covers.openlibrary.org/b/id/${bookDetail?.covers[0]}-L.jpg`}
-                width={200}
-              />
-              <div className="grid gap-1.5">
-                <h1 className="font-bold text-2xl sm:text-3xl">
-                  {bookSelected?.title}
-                </h1>
-                <p className="text-sm text-gray-500">
-                  {bookSelected?.author_name[0]}
+      <div className="grid grid-flow-col auto-cols-auto mt-12 gap-12">
+        <div className="flex flex-col items-center">
+          <Image
+            alt="Book cover"
+            height="320"
+            src={`https://covers.openlibrary.org/b/olid/${bookSelected?.cover_edition_key}-L.jpg`}
+            width="200"
+          />
+          <Rate
+            allowHalf
+            defaultValue={parseRating(bookRatings?.average_rating)}
+          />
+        </div>
+        <div className="flex flex-col">
+          <div className="flex flex-row items-baseline">
+            <p className="text-3xl font-bold mr-2">{bookDetail?.title}</p>
+            {bookSelected?.author_name?.map(
+              (author: string, index: NumberSchema) => (
+                <p className="text-gray-500 text-sm">
+                  {author}{" "}
+                  {bookSelected?.author_name?.length > index + 1 ? ", " : ""}
                 </p>
-                <div className="flex items-center gap-0.5">
-                  <StarIcon className="w-5 h-5 fill-primary" />
-                  <StarIcon className="w-5 h-5 fill-primary" />
-                  <StarIcon className="w-5 h-5 fill-primary" />
-                  <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                  <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    (3.67 average from 100 reviews)
-                  </span>
-                </div>
-              </div>
-            </div>
+              )
+            )}
           </div>
-          <div className="grid gap-4">
-            <h2 className="font-bold text-xl">Description</h2>
+          {isLoading ? (
+            <DescriptionSkeleton />
+          ) : (
             <ShowMoreText
-              /* Default options */
-              lines={3}
+              lines={8}
               more="Show more"
               less="Show less"
-              // className="content-css"
               anchorClass="show-more-less-clickable"
               onClick={() => setShowMoreDescription(!showMoreDescription)}
               expanded={showMoreDescription}
-              width={0}
-              truncatedEndingComponent={"... "}
+              truncatedEndingComponent={"..."}
+              width={560}
+              className="mt-4"
             >
-              {bookDetail?.description?.value
-                ? bookDetail?.description?.value
-                : bookDetail?.description}
+              {bookDetail?.description}
             </ShowMoreText>
-          </div>
-          <button className="w-full bg-white text-black border border-gray-300 rounded-lg px-4 py-2" onClick={() => setShowModal(true)}>
-            Add a Review
-          </button>
+          )}
         </div>
-        <div className="grid gap-4">
-          <h2 className="font-bold text-xl">Popular Reviews</h2>
-          <div className="grid gap-4">
-            <div className="grid gap-1.5">
-              <h3 className="font-bold text-lg">Amanda</h3>
-              <div className="flex items-center gap-0.5">
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              </div>
-              <p>
-                I loved the concept of this book. The writing was beautiful and
-                I found myself reflecting on my own life choices. The idea of
-                being able to explore the different paths my life could have
-                taken was both intriguing and thought-provoking. I would
-                definitely recommend this book to anyone who enjoys
-                contemplating the what-ifs in life.
-              </p>
-            </div>
-            <div className="grid gap-1.5">
-              <h3 className="font-bold text-lg">Mark</h3>
-              <div className="flex items-center gap-0.5">
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              </div>
-              <p>
-                The Midnight Library is a captivating and imaginative tale that
-                explores the concept of regret and the infinite possibilities
-                that life offers. The author's prose is both lyrical and
-                introspective, drawing the reader into the world of the
-                protagonist and the myriad lives she encounters within the
-                library. The book raises profound questions about the nature of
-                happiness, the significance of our choices, and the
-                possibilities of redemption. It is a poignant and
-                thought-provoking read that will linger in the mind long after
-                the final page.
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col items-center">
+          <BookActions />
         </div>
       </div>
-      <AddReview isOpen={showModal} onClose={() => setShowModal(false)} createReview={createReview}/>
+      <AddReview
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        createReview={createReview}
+      />
     </>
-  );
-}
-
-function StarIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 17.77 5.82 7 8.91" />
-    </svg>
   );
 }

@@ -30,13 +30,19 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
     reset,
     formState: { errors },
   } = useForm<ReviewSchemaType>({resolver: yupResolver(ReviewSchema) });
+  const pathname = usePathname()
 
   const onSubmit: SubmitHandler<ReviewSchemaType> = (data:any) => {
-    console.log('createReview', typeof createReview)
-    createReview()
+    const formData = {
+      title: data.title,
+      text: data.text,
+      book_id: pathname.split('/').pop(),
+      rating: data.rating
+    }
+
+    createReview(formData)
   };
 
-  const pathname = usePathname()
 
   const onRequestClose = () => {
     onClose();
@@ -63,8 +69,8 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
       <Card className="p-0">
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardHeader className="p-6">
-            <p className="text-2xl">Add a review</p>
-            <p className="text-xl">Share your thoughts with other readers</p>
+            <p className="text-2xl font-bold">Add a review</p>
+            <p className="text-xl font-medium">Share your thoughts with other readers</p>
           </CardHeader>
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
@@ -102,13 +108,13 @@ export function AddReview({ isOpen, onClose, createReview }: AddReviewProps) {
                 Review
               </Label>
               <Controller
-                name="description"
+                name="text"
                 control={control}
                 render={({ field }) => (
                   <TextArea
                     className="min-h-[100px]"
                     variant="filled"
-                    id="review"
+                    id="text"
                     placeholder="Enter your review"
                     {...field}
                   />

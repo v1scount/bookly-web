@@ -9,7 +9,7 @@ const BooksSkeleton = (props: any) => (
       <ContentLoader
         key={index}
         speed={2}
-        width={192}
+        width={190}
         height={320}
         viewBox="0 0 200 320"
         backgroundColor="#f3f3f3"

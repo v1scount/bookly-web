@@ -23,3 +23,20 @@ export function getBookDetails(id: string) {
         isError: error
     }
 }
+
+
+export const getBookRatings = (id: string) => {
+    const {data, error, isLoading} = useSWR(`https://openlibrary.org/works/${id}/ratings.json`, fetcher)
+
+    return {
+        bookRatings: data,
+        isErrorRatings: error,
+        isLoadingRatings: isLoading
+    }
+}
+
+export const searchBooks = (query: string) => {
+    const {data, error, isLoading} = useSWR(`https://openlibrary.org/search.json?q=${query}`, fetcher)
+
+    console.log(data)
+}

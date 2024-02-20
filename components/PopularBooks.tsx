@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { CardContent, Card } from "@/components/ui/card";
 import { getPopularBooks } from "@/app/lib/data";
-import BookSkeleton from "@/app/ui/skeletons";
+import BookSkeleton from "@/components/ui/skeletons/card-skeleton";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/app/lib/store";
@@ -23,7 +23,7 @@ export default function PopularBooks({ bookLimit }: PopularBooks) {
   };
 
   return (
-    <>
+    <section className="mt-12">
       <h2 className="text-2xl font-bold">Popular Books</h2>
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-4">
         {isLoading ? (
@@ -33,27 +33,27 @@ export default function PopularBooks({ bookLimit }: PopularBooks) {
             return (
               <Card
                 key={index}
-                className="max-w-48 max-h-80"
+                className="max-w-48"
                 onClick={() => onClickBook(book)}
               >
                 <CardContent className="flex flex-col items-center">
                   <Image
                     alt="Book cover"
-                    height="200"
+                    height="240"
                     src={`https://covers.openlibrary.org/b/olid/${book?.cover_edition_key}-L.jpg`}
                     style={{
-                      aspectRatio: "150/200",
+                      aspectRatio: "180/240",
                       objectFit: "contain",
                     }}
-                    width="150"
+                    width="240"
                   />
-                  <h3 className="mt-2 text-lg font-semibold">{book?.title}</h3>
+                  <h3 className="my-4 text-md font-semibold text-center px-2">{book?.title}</h3>
                 </CardContent>
               </Card>
             );
           })
         )}
       </div>
-    </>
+    </section>
   );
 }

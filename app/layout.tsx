@@ -19,13 +19,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.className} >
+    <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
+        <Header />
         <main className="min-h-screen flex flex-col items-center">
-          <Header />
-          <section className="mt-12">
-            <AntdRegistry>{children}</AntdRegistry>
-          </section>
+          <AntdRegistry>{children}</AntdRegistry>
+          {/* <section className="mt-12">
+          </section> */}
         </main>
       </body>
     </html>
