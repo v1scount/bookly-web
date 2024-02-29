@@ -30,7 +30,7 @@ export function BookDetail() {
     bookSelected?.key.split("/").pop()
   );
 
-  console.log("bookDetail?", bookSelected);
+  console.log("bookDetail?", bookDetail);
 
   return (
     <>
@@ -48,7 +48,7 @@ export function BookDetail() {
           />
         </div>
         <div className="flex flex-col">
-          <div className="flex flex-row items-baseline">
+          <div className="flex flex-col items-baseline">
             <p className="text-3xl font-bold mr-2">{bookDetail?.title}</p>
             {bookSelected?.author_name?.map(
               (author: string, index: NumberSchema) => (
@@ -73,7 +73,7 @@ export function BookDetail() {
               width={560}
               className="mt-4"
             >
-              {bookDetail?.description}
+              {bookDetail?.description?.value ? bookDetail?.description?.value : bookDetail?.description}
             </ShowMoreText>
           )}
         </div>
