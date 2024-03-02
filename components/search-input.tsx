@@ -15,7 +15,7 @@ export default function SearchInput() {
     })
     
   };
-  console.log(searchTerm)
+  // console.log(searchTerm)
   return (
     <Search
       placeholder="Search"

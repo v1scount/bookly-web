@@ -7,8 +7,9 @@
 
 import { useAppStore } from "@/app/lib/store";
 import { getBookDetails, getBookRatings } from "@/app/lib/data";
+import { isBookRead as getIsBookRead } from "@/app/lib/supabase/books";
 import ShowMoreText from "react-show-more-text";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { AddReview } from "./add-review";
 import { createReview, getBookReviews } from "@/app/lib/supabase/";
 import DescriptionSkeleton from "./ui/skeletons/description-skeleton";
@@ -19,19 +20,46 @@ import Review from "@/components/Reviews/Review";
 import BookActions from "./book-actions";
 import { NumberSchema } from "yup";
 import Image from "next/image";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export function BookDetail() {
   const [showMoreDescription, setShowMoreDescription] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isBookRead, setIsBookRead] = useState(false);
+  const supabase = createClientComponentClient();
 
   const bookSelected = useAppStore((state) => state.bookDetail);
   const { bookDetail, isLoading, isError } = getBookDetails(bookSelected?.key);
   const { bookRatings, isErrorRatings, isLoadingRatings } = getBookRatings(
     bookSelected?.key.split("/").pop()
   );
+  // const isBookRead = use(getIsBookRead(bookSelected?.key.split("/").pop()));
 
-  console.log("bookDetail?", bookDetail);
+  const getBookIsRead = async (bookId: string) => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
+      const { data, error } = await supabase
+        .from("read_books")
+        .select("*")
+        .eq("book_id", bookId);
+
+      if (data && data?.length > 0) {
+        setIsBookRead(true);
+      }
+      return data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    getBookIsRead(bookSelected?.key.split("/").pop());
+  }, []);
+
+  console.log("data", isBookRead);
   return (
     <>
       <div className="grid grid-flow-col auto-cols-auto mt-12 gap-12">
@@ -49,10 +77,12 @@ export function BookDetail() {
         </div>
         <div className="flex flex-col">
           <div className="flex flex-col items-baseline">
-            <p className="text-3xl font-bold mr-2">{bookDetail?.title}</p>
+            <p className="text-3xl font-bold mr-2 text-black dark:text-white">
+              {bookDetail?.title}
+            </p>
             {bookSelected?.author_name?.map(
               (author: string, index: NumberSchema) => (
-                <p className="text-gray-500 text-sm">
+                <p className="text-black dark:text-white text-sm">
                   {author}{" "}
                   {bookSelected?.author_name?.length > index + 1 ? ", " : ""}
                 </p>
@@ -71,14 +101,16 @@ export function BookDetail() {
               expanded={showMoreDescription}
               truncatedEndingComponent={"..."}
               width={560}
-              className="mt-4"
+              className="mt-4 text-black dark:text-white"
             >
-              {bookDetail?.description?.value ? bookDetail?.description?.value : bookDetail?.description}
+              {bookDetail?.description?.value
+                ? bookDetail?.description?.value
+                : bookDetail?.description}
             </ShowMoreText>
           )}
         </div>
         <div className="flex flex-col items-center">
-          <BookActions />
+          <BookActions isBookRead={isBookRead} setIsBookRead={setIsBookRead}/>
         </div>
       </div>
       <AddReview
