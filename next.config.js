@@ -6,7 +6,7 @@ const nextConfig = {
             protocol: 'https',
             hostname: 'covers.openlibrary.org',
             port: '3000',
-            pathname: '',
+            pathname: '**',
           },
         ],
         domains: ['covers.openlibrary.org'],
