@@ -25,6 +25,7 @@
     "clsx": "^2.1.0",
     "geist": "^1.2.1",
     "lodash": "^4.17.21",
+    "lottie-web": "^5.12.2",
     "lucide-react": "^0.321.0",
     "next": "latest",
     "plaiceholder": "^3.0.0",

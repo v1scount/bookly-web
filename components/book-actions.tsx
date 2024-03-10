@@ -39,6 +39,7 @@ const EYE_ICON = require("@/assets/wired-outline-eye.json");
 const BOOK_ICON = require("@/assets/outline-book.json");
 const PLUS_ICON = require("@/assets/outline-plus-circle.json");
 const HEART_ICON = require("@/assets/heart.json");
+import { AnimationDirection } from "@lordicon/react/dist/interfaces";
 
 export default function BookActions() {
   const pathname = usePathname();
@@ -50,9 +51,9 @@ export default function BookActions() {
   const [isBookInReadList, setIsBookInReadList] = useState(false);
 
   // Icon Directions
-  const [bookDirection, setBookDirection] = useState(-1);
-  const [heartDirection, setHeartDirection] = useState(-1);
-  const [plusDirection, setPlusDirection] = useState(-1);
+  const [bookDirection, setBookDirection] = useState<AnimationDirection>(-1);
+  const [heartDirection, setHeartDirection] = useState<AnimationDirection>(-1);
+  const [plusDirection, setPlusDirection] = useState<AnimationDirection>(-1);
 
   //Book rating
   const [bookRating, setBookRating] = useState(0);
@@ -124,14 +125,14 @@ export default function BookActions() {
         }
       });
     book_id &&
-      getIsBookLiked(book_id).then((data: boolean) => {
+      getIsBookLiked(book_id).then((data: any) => {
         if (data) {
           setIsBookLiked(true);
           setHeartDirection(1);
         }
       });
     book_id &&
-      getIsBookInReadList(book_id).then((data: boolean) => {
+      getIsBookInReadList(book_id).then((data: any) => {
         if (data) {
           setIsBookInReadList(true);
           setPlusDirection(1);
