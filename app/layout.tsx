@@ -1,5 +1,7 @@
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
+import Header from "@/components/Header";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -11,7 +13,7 @@ export const metadata = {
   description: "The fastest way to build apps with Next.js and Supabase",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -19,8 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
+        <Header />
         <main className="min-h-screen flex flex-col items-center">
-          {children}
+          <AntdRegistry>{children}</AntdRegistry>
+          {/* <section className="mt-12">
+          </section> */}
         </main>
       </body>
     </html>

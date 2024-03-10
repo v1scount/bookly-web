@@ -11,6 +11,7 @@ const nextConfig = {
         ],
         domains: ['covers.openlibrary.org'],
       },
+      // basePath: '/home'
 };
 
 module.exports = nextConfig;

@@ -1,44 +1,57 @@
-import NextLogo from "./NextLogo";
-import SupabaseLogo from "./SupabaseLogo";
+import Link from "next/link";
+import React from "react";
+import AuthButton from "../components/AuthButton";
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import SearchInput from "./search-input";
 
-export default function Header() {
-  return (
-    <div className="flex flex-col gap-16 items-center">
-      <div className="flex gap-8 justify-center items-center">
-        <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <SupabaseLogo />
-        </a>
-        <span className="border-l rotate-45 h-6" />
-        <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
-          <NextLogo />
-        </a>
-      </div>
-      <h1 className="sr-only">Supabase and Next.js Starter Template</h1>
-      <p className="text-3xl lg:text-4xl !leading-tight mx-auto max-w-xl text-center">
-        The fastest way to build apps with{" "}
-        <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
-          Supabase
-        </a>{" "}
-        and{" "}
-        <a
-          href="https://nextjs.org/"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
-          Next.js
-        </a>
-      </p>
-      <div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent my-8" />
-    </div>
-  );
+interface HeaderProps {
+  user: boolean;
 }
+
+const Header = async () => {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  return (
+    <nav className="w-full h-20 bg-emerald-800 sticky top-0">
+      <div className="container mx-auto px-4 h-full">
+        <div className="flex justify-between items-center h-full">
+          {/* <Logo /> */}
+          <ul className="hidden md:flex gap-x-6 text-white">
+            <li>
+              <Link href="/">
+                <p>Home</p>
+              </Link>
+            </li>
+            <li>
+              <Link href="/popular">
+                <p>Popular</p>
+              </Link>
+            </li>
+            <li>
+              <Link href="/latest">
+                <p>Latest</p>
+              </Link>
+            </li>
+            <li>
+              <Link href="/lists">
+                <p>Lists</p>
+              </Link>
+            </li>
+          </ul>
+          <SearchInput />
+          {/* {!user ? <AuthButton user={user} /> : <></>} */}
+          <AuthButton user={user} />
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Header;

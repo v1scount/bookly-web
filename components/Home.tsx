@@ -3,9 +3,6 @@
  * @see https://v0.dev/t/OPffSoOXqwG
  */
 import Link from "next/link";
-import axios from "axios";
-
-const fetcher = (url: any) => axios.get(url).then((res) => res.data);
 import {
   NavigationMenuLink,
   NavigationMenuList,
@@ -14,83 +11,81 @@ import {
 import { CardContent, Card } from "@/components/ui/card";
 import PopularBooks from "@/components/PopularBooks";
 import { Suspense } from "react";
-import BookSkeleton from "@/app/ui/skeletons";
 
 export function Home() {
   return (
     <>
-      <main>
-        <PopularBooks />
-        <section>
-          <h2 className="text-2xl font-bold">Recently Added</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-            <Card>
-              <CardContent>
-                <img
-                  alt="Book cover"
-                  height="200"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "150/200",
-                    objectFit: "cover",
-                  }}
-                  width="150"
-                />
-                <h3 className="mt-2 text-lg font-semibold">Book Title</h3>
-                <p className="text-gray-500">Author Name</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent>
-                <img
-                  alt="Book cover"
-                  height="200"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "150/200",
-                    objectFit: "cover",
-                  }}
-                  width="150"
-                />
-                <h3 className="mt-2 text-lg font-semibold">Book Title</h3>
-                <p className="text-gray-500">Author Name</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent>
-                <img
-                  alt="Book cover"
-                  height="200"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "150/200",
-                    objectFit: "cover",
-                  }}
-                  width="150"
-                />
-                <h3 className="mt-2 text-lg font-semibold">Book Title</h3>
-                <p className="text-gray-500">Author Name</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent>
-                <img
-                  alt="Book cover"
-                  height="200"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "150/200",
-                    objectFit: "cover",
-                  }}
-                  width="150"
-                />
-                <h3 className="mt-2 text-lg font-semibold">Book Title</h3>
-                <p className="text-gray-500">Author Name</p>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-        {/* <section>
+      <PopularBooks bookLimit={6} />
+      {/* <div>
+        <h2 className="text-2xl font-bold">Recently Added</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          <Card>
+            <CardContent>
+              <img
+                alt="Book cover"
+                height="200"
+                src="/placeholder.svg"
+                style={{
+                  aspectRatio: "150/200",
+                  objectFit: "cover",
+                }}
+                width="150"
+              />
+              <h3 className="mt-2 text-lg font-semibold">Book Title</h3>
+              <p className="text-gray-500">Author Name</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <img
+                alt="Book cover"
+                height="200"
+                src="/placeholder.svg"
+                style={{
+                  aspectRatio: "150/200",
+                  objectFit: "cover",
+                }}
+                width="150"
+              />
+              <h3 className="mt-2 text-lg font-semibold">Book Title</h3>
+              <p className="text-gray-500">Author Name</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <img
+                alt="Book cover"
+                height="200"
+                src="/placeholder.svg"
+                style={{
+                  aspectRatio: "150/200",
+                  objectFit: "cover",
+                }}
+                width="150"
+              />
+              <h3 className="mt-2 text-lg font-semibold">Book Title</h3>
+              <p className="text-gray-500">Author Name</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <img
+                alt="Book cover"
+                height="200"
+                src="/placeholder.svg"
+                style={{
+                  aspectRatio: "150/200",
+                  objectFit: "cover",
+                }}
+                width="150"
+              />
+              <h3 className="mt-2 text-lg font-semibold">Book Title</h3>
+              <p className="text-gray-500">Author Name</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div> */}
+      {/* <sectionF>
           <h2 className="text-2xl font-bold">News</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <Card>
@@ -126,8 +121,7 @@ export function Home() {
               </CardContent>
             </Card>
           </div>
-        </section> */}
-      </main>
+        </sectionF> */}
     </>
   );
 }

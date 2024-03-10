@@ -1,34 +1,42 @@
 import useSWR from "swr";
 import axios from 'axios';
-import { getPlaiceholder } from "plaiceholder";
 
 const fetcher = (url: any) => axios.get(url).then((res) => res.data);
 
 
-export function getPopularBooks() {
-    const {data, error, isLoading} = useSWR('https://openlibrary.org/trending/daily.json?limit=4', fetcher)
+export function getPopularBooks(limit = 6) {
+    const {data, error, isLoading} = useSWR(`https://openlibrary.org/trending/daily.json?limit=${limit}`, fetcher)
 
     return {
-        books: data?.works,
+        popularBooks: data?.works,
         isLoading,
         isError: error
     }
 }
 
-// export async function getBookCover(id:string) {
-//     try {
-//         const src = `https://covers.openlibrary.org/b/olid/${id}-S.jpg`;
-       
-//         const buffer = await fetch(src).then(async (res) =>
-//           Buffer.from(await res.arrayBuffer())
-//         );
-       
-//         const { base64 } = await getPlaiceholder(buffer);
+export function getBookDetails(id: string) {
+    const {data, error, isLoading} = useSWR(`https://openlibrary.org${id}.json`, fetcher)
 
-//         return base64
-       
-//         // console.log(base64);
-//       } catch (err) {
-//         err;
-//       }
-// }
+    return {
+        bookDetail: data,
+        isLoading,
+        isError: error
+    }
+}
+
+
+export const getBookRatings = (id: string) => {
+    const {data, error, isLoading} = useSWR(`https://openlibrary.org/works/${id}/ratings.json`, fetcher)
+
+    return {
+        bookRatings: data,
+        isErrorRatings: error,
+        isLoadingRatings: isLoading
+    }
+}
+
+export const searchBooks = (query: string) => {
+    const {data, error, isLoading} = useSWR(`https://openlibrary.org/search.json?q=${query}`, fetcher)
+
+    console.log(data)
+}
