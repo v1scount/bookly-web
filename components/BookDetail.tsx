@@ -7,7 +7,6 @@
 
 import { useAppStore } from "@/app/lib/store";
 import { getBookDetails, getBookRatings } from "@/app/lib/data";
-import { isBookRead as getIsBookRead } from "@/app/lib/supabase/books";
 import ShowMoreText from "react-show-more-text";
 import React, { useState, useEffect, useCallback } from "react";
 import { AddReview } from "./add-review";
