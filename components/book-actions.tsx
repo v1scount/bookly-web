@@ -124,14 +124,14 @@ export default function BookActions() {
         }
       });
     book_id &&
-      getIsBookLiked(book_id).then((data: boolean) => {
+      getIsBookLiked(book_id).then((data: any) => {
         if (data) {
           setIsBookLiked(true);
           setHeartDirection(1);
         }
       });
     book_id &&
-      getIsBookInReadList(book_id).then((data: boolean) => {
+      getIsBookInReadList(book_id).then((data: any) => {
         if (data) {
           setIsBookInReadList(true);
           setPlusDirection(1);
