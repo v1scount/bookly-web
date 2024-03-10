@@ -52,7 +52,7 @@ export function BookDetail() {
               {bookDetail?.title}
             </p>
             {bookSelected?.author_name?.map(
-              (author: string, index: NumberSchema) => (
+              (author: string, index: number) => (
                 <p className="text-black dark:text-white text-sm">
                   {author}{" "}
                   {bookSelected?.author_name?.length > index + 1 ? ", " : ""}
