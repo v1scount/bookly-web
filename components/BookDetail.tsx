@@ -20,46 +20,18 @@ import Review from "@/components/Reviews/Review";
 import BookActions from "./book-actions";
 import { NumberSchema } from "yup";
 import Image from "next/image";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export function BookDetail() {
   const [showMoreDescription, setShowMoreDescription] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [isBookRead, setIsBookRead] = useState(false);
-  const supabase = createClientComponentClient();
 
   const bookSelected = useAppStore((state) => state.bookDetail);
   const { bookDetail, isLoading, isError } = getBookDetails(bookSelected?.key);
   const { bookRatings, isErrorRatings, isLoadingRatings } = getBookRatings(
     bookSelected?.key.split("/").pop()
   );
-  // const isBookRead = use(getIsBookRead(bookSelected?.key.split("/").pop()));
 
-  const getBookIsRead = async (bookId: string) => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
 
-      const { data, error } = await supabase
-        .from("read_books")
-        .select("*")
-        .eq("book_id", bookId);
-
-      if (data && data?.length > 0) {
-        setIsBookRead(true);
-      }
-      return data;
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
-  useEffect(() => {
-    getBookIsRead(bookSelected?.key.split("/").pop());
-  }, []);
-
-  console.log("data", isBookRead);
   return (
     <>
       <div className="grid grid-flow-col auto-cols-auto mt-12 gap-12">
@@ -110,7 +82,7 @@ export function BookDetail() {
           )}
         </div>
         <div className="flex flex-col items-center">
-          <BookActions isBookRead={isBookRead} setIsBookRead={setIsBookRead}/>
+          <BookActions />
         </div>
       </div>
       <AddReview
