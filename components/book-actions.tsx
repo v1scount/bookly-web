@@ -6,15 +6,6 @@
  */
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  PiHeartStraightFill,
-  PiHeartStraightLight,
-  PiBookLight,
-  PiBookFill,
-  PiEyeFill,
-  PiEyeLight,
-} from "react-icons/pi";
 import { Rate } from "antd";
 import {
   addBookToRead,
@@ -29,17 +20,17 @@ import {
   rateBook,
   getBookRating,
   updateRateBook,
-  removeBookRating
+  removeBookRating,
 } from "@/app/lib/supabase/books";
 import { usePathname } from "next/navigation";
 import { Player } from "@lordicon/react";
-// import { isBookRead } from "@/app/lib/supabase/books";
 
 const EYE_ICON = require("@/assets/wired-outline-eye.json");
 const BOOK_ICON = require("@/assets/outline-book.json");
 const PLUS_ICON = require("@/assets/outline-plus-circle.json");
 const HEART_ICON = require("@/assets/heart.json");
 import { AnimationDirection } from "@lordicon/react/dist/interfaces";
+import { useTheme } from "next-themes";
 
 export default function BookActions() {
   const pathname = usePathname();
@@ -57,6 +48,9 @@ export default function BookActions() {
 
   //Book rating
   const [bookRating, setBookRating] = useState(0);
+
+  //theme
+  const { resolvedTheme } = useTheme();
 
   const bookRef = useRef<Player>(null);
   const heartRef = useRef<Player>(null);
@@ -104,7 +98,6 @@ export default function BookActions() {
   };
 
   const changeBookRating = (value: number) => {
-    console.log('bookRating', bookRating)
     if (bookRating !== 0) {
       if (value === 0) book_id && removeBookRating(book_id);
       else book_id && updateRateBook(book_id, value);
@@ -157,7 +150,7 @@ export default function BookActions() {
   }, [plusDirection]);
 
   return (
-    <div className="bg-[#2b2b2b] p-4 rounded-lg text-white w-64">
+    <div className="dark:bg-backgroundDark bg-white p-4 border-2 border-primary dark:border-secondary rounded-lg text-white w-64">
       <div className="flex justify-between mb-4">
         <div
           onClick={() => changeDirection("book")}
@@ -167,7 +160,7 @@ export default function BookActions() {
             ref={bookRef}
             icon={BOOK_ICON}
             direction={bookDirection}
-            colorize="#FFFF"
+            colorize={resolvedTheme === "dark" ? "#FFFF" : "#2b2b2b"}
             size={48}
             state="morph-book"
           />
@@ -181,11 +174,13 @@ export default function BookActions() {
             ref={heartRef}
             icon={HEART_ICON}
             direction={heartDirection}
-            colorize="#FFFF"
+            colorize={resolvedTheme === "dark" ? "#FFFF" : "#2b2b2b"}
             size={48}
             state="morph-heart"
           />
-          <p>{heartDirection === -1 ? "Like" : "Remove"}</p>
+          <p className="dark:text-textDark text-textLight">
+            {heartDirection === -1 ? "Like" : "Remove"}
+          </p>
         </div>
         <div
           onClick={() => changeDirection("plus")}
@@ -195,7 +190,7 @@ export default function BookActions() {
             ref={plusRef}
             icon={PLUS_ICON}
             direction={plusDirection}
-            colorize="#FFFF"
+            colorize={resolvedTheme === "dark" ? "#FFFF" : "#2b2b2b"}
             size={48}
             state="morph-minus"
           />
@@ -203,7 +198,9 @@ export default function BookActions() {
         </div>
       </div>
       <div className="mb-4">
-        <div className="text-lg font-semibold mb-2 text-center">Rate</div>
+        <div className="text-lg font-semibold mb-2 text-center">
+          <p>Rate</p>
+        </div>
         <div className="flex flex-row justify-center">
           <Rate
             style={{ fontSize: 32, alignSelf: "center" }}
@@ -215,13 +212,13 @@ export default function BookActions() {
       </div>
       <div className="text-sm">
         <Button className="w-full mb-2" variant="ghost">
-          Show your activity
+          <p>Show your activity</p>
         </Button>
         <Button className="w-full mb-2" variant="ghost">
-          Review or log...
+          <p>Review or log...</p>
         </Button>
         <Button className="w-full" variant="ghost">
-          Add this book to lists...
+          <p>Add this book to lists...</p>
         </Button>
       </div>
       {/* <div className="flex items-center justify-between bg-[#1b1b1b] p-2 rounded">

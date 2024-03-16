@@ -4,7 +4,7 @@ import ContentLoader from "react-content-loader"
 const DescriptionSkeleton = (props:any) => (
   <ContentLoader 
     speed={2}
-    width={340}
+    width={540}
     height={84}
     viewBox="0 0 340 84"
     backgroundColor="#f3f3f3"

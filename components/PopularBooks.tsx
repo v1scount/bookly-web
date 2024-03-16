@@ -24,7 +24,7 @@ export default function PopularBooks({ bookLimit }: PopularBooks) {
 
   return (
     <section className="mt-12">
-      <h2 className="text-2xl font-bold">Popular Books</h2>
+      <h2 className="dark:text-white text-gray-950 text-2xl font-bold">Popular Books</h2>
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-4">
         {isLoading ? (
           <BookSkeleton />
@@ -39,11 +39,13 @@ export default function PopularBooks({ bookLimit }: PopularBooks) {
                 <CardContent className="flex flex-col items-center">
                   <Image
                     alt="Book cover"
-                    height="240"
+                    height="320"
                     src={`https://covers.openlibrary.org/b/olid/${book?.cover_edition_key}-L.jpg`}
                     style={{
-                      aspectRatio: "180/240",
-                      objectFit: "contain",
+                      aspectRatio: "3/4",
+                      objectFit: "fill",
+                      borderTopRightRadius: 8,
+                      borderTopLeftRadius: 8
                     }}
                     width="240"
                   />
