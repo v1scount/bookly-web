@@ -28,6 +28,7 @@
     "lottie-web": "^5.12.2",
     "lucide-react": "^0.321.0",
     "next": "latest",
+    "next-themes": "^0.3.0",
     "plaiceholder": "^3.0.0",
     "postcss": "8.4.33",
     "react": "18.2.0",

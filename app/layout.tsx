@@ -2,6 +2,14 @@ import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import Header from "@/components/Header";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ThemeProvider } from "next-themes";
+import ThemeChangerFab from "@/components/Fab";
+import { Montserrat } from "next/font/google";
+
+const inter = Montserrat({
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -19,13 +27,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.className}>
+    <html lang="en" className={inter.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
-        <Header />
         <main className="min-h-screen flex flex-col items-center">
-          <AntdRegistry>{children}</AntdRegistry>
-          {/* <section className="mt-12">
-          </section> */}
+          <ThemeProvider attribute="class">
+            <Header />
+            <AntdRegistry>{children}</AntdRegistry>
+            <ThemeChangerFab />
+          </ThemeProvider>
         </main>
       </body>
     </html>

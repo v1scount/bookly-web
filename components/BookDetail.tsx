@@ -19,6 +19,7 @@ import Review from "@/components/Reviews/Review";
 import BookActions from "./book-actions";
 import { NumberSchema } from "yup";
 import Image from "next/image";
+import { Skeleton } from "antd";
 
 export function BookDetail() {
   const [showMoreDescription, setShowMoreDescription] = useState(false);
@@ -30,65 +31,69 @@ export function BookDetail() {
     bookSelected?.key.split("/").pop()
   );
 
-
   return (
-    <>
-      <div className="grid grid-flow-col auto-cols-auto mt-12 gap-12">
-        <div className="flex flex-col items-center">
-          <Image
-            alt="Book cover"
-            height="320"
-            src={`https://covers.openlibrary.org/b/olid/${bookSelected?.cover_edition_key}-L.jpg`}
-            width="200"
-          />
-          <Rate
-            allowHalf
-            defaultValue={parseRating(bookRatings?.average_rating)}
-          />
-        </div>
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-1 mt-12">
+      <div className="flex flex-col items-center">
+        <Image
+          alt="Book cover"
+          height="320"
+          src={`https://covers.openlibrary.org/b/olid/${bookSelected?.cover_edition_key}-L.jpg`}
+          width="200"
+        />
+      </div>
+      <div className="flex flex-col">
         <div className="flex flex-col">
-          <div className="flex flex-col items-baseline">
+          {isLoading ? (
+            <Skeleton paragraph={{ rows: 1 }} title={false} />
+          ) : (
             <p className="text-3xl font-bold mr-2 text-black dark:text-white">
               {bookDetail?.title}
             </p>
-            {bookSelected?.author_name?.map(
-              (author: string, index: number) => (
-                <p className="text-black dark:text-white text-sm">
-                  {author}{" "}
-                  {bookSelected?.author_name?.length > index + 1 ? ", " : ""}
-                </p>
-              )
-            )}
-          </div>
+          )}
           {isLoading ? (
-            <DescriptionSkeleton />
+            <Skeleton paragraph={{ rows: 1 }} title={false} className="mt-8" />
           ) : (
-            <ShowMoreText
-              lines={8}
-              more="Show more"
-              less="Show less"
-              anchorClass="show-more-less-clickable"
-              onClick={() => setShowMoreDescription(!showMoreDescription)}
-              expanded={showMoreDescription}
-              truncatedEndingComponent={"..."}
-              width={560}
-              className="mt-4 text-black dark:text-white"
-            >
-              {bookDetail?.description?.value
-                ? bookDetail?.description?.value
-                : bookDetail?.description}
-            </ShowMoreText>
+            bookSelected?.author_name?.map((author: string, index: number) => (
+              <p className="text-sm">
+                {author}{" "}
+                {bookSelected?.author_name?.length > index + 1 ? ", " : ""}
+              </p>
+            ))
           )}
         </div>
-        <div className="flex flex-col items-center">
-          <BookActions />
-        </div>
+        {isLoading ? (
+          <div className="flex flex-col flex-1 mt-8 mr-12 items-center">
+            <div className="mb-8">
+              <DescriptionSkeleton />
+            </div>
+            <DescriptionSkeleton />
+          </div>
+        ) : (
+          <ShowMoreText
+            lines={8}
+            more="Show more"
+            less="Show less"
+            anchorClass="show-more-less-clickable"
+            onClick={() => setShowMoreDescription(!showMoreDescription)}
+            expanded={showMoreDescription}
+            truncatedEndingComponent={"..."}
+            width={640}
+            className="mt-4 dark:text-textDark text-textLight"
+          >
+            {bookDetail?.description?.value
+              ? bookDetail?.description?.value
+              : bookDetail?.description}
+          </ShowMoreText>
+        )}
+      </div>
+      <div className="flex flex-col items-center">
+        <BookActions />
       </div>
       <AddReview
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         createReview={createReview}
       />
-    </>
+    </div>
   );
 }
