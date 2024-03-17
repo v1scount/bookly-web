@@ -1,24 +1,23 @@
 import Link from "next/link";
-import {signOut} from "@/app/lib/supabase"
+import { signOut } from "@/app/lib/supabase";
 
-
-export default async function AuthButton({user} : any) {
-
-  return user ? (
+export default function AuthButton({ user }: any) {
+  console.log(user);
+  return user.user.user ? (
     <div className="flex items-center gap-4">
-      Hey, {user.email}!
       <form action={signOut}>
-        <button className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
-          Logout
+        <button className="w-24 py-2 ml-5 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+          Sign out
         </button>
       </form>
     </div>
   ) : (
-    <Link
-      href="/login"
-      className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
-    >
-      Login
-    </Link>
+    <div className="flex items-center gap-4">
+      <Link href="/login">
+        <button className="w-24 py-2 ml-5 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+          Sign in
+        </button>
+      </Link>
+    </div>
   );
 }

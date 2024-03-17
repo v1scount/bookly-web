@@ -27,8 +27,8 @@
   body {
     @apply dark:bg-backgroundDark bg-backgroundLight;
 }
-p {
-  @apply dark:text-textDark text-textLight;
+p, h1, h2, span, div {
+  @apply text-textLight dark:text-textDark;
 }
 }
 

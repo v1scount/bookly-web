@@ -1,10 +1,10 @@
 import Link from "next/link";
 import React from "react";
-import AuthButton from "../components/AuthButton";
+import AuthButton from "../AuthButton";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import SearchInput from "./search-input";
+import SearchInput from "../search-input";
 
 interface HeaderProps {
   user: boolean;
@@ -26,24 +26,16 @@ const Header = async () => {
           <ul className="hidden md:flex gap-x-6 text-white">
             <li>
               <Link href="/">
-                <p>Home</p>
+                <p className="text-secondary">Home</p>
               </Link>
             </li>
-            <li>
-              <Link href="/popular">
-                <p>Popular</p>
-              </Link>
-            </li>
-            <li>
-              <Link href="/latest">
-                <p>Latest</p>
-              </Link>
-            </li>
-            <li>
-              <Link href="/lists">
-                <p>Lists</p>
-              </Link>
-            </li>
+            {user && (
+              <li>
+                <Link href="/profile">
+                  <p className="text-secondary">Profile</p>
+                </Link>
+              </li>
+            )}
           </ul>
           <SearchInput />
           {/* {!user ? <AuthButton user={user} /> : <></>} */}
