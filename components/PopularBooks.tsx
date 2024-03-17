@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { CardContent, Card } from "@/components/ui/card";
 import { getPopularBooks } from "@/app/lib/data";
 import BookSkeleton from "@/components/ui/skeletons/card-skeleton";
@@ -24,7 +23,9 @@ export default function PopularBooks({ bookLimit }: PopularBooks) {
 
   return (
     <section className="mt-12">
-      <h2 className="dark:text-white text-gray-950 text-2xl font-bold">Popular Books</h2>
+      <h2 className="dark:text-white text-gray-950 text-2xl font-bold">
+        Popular Books
+      </h2>
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-4">
         {isLoading ? (
           <BookSkeleton />
@@ -45,11 +46,13 @@ export default function PopularBooks({ bookLimit }: PopularBooks) {
                       aspectRatio: "3/4",
                       objectFit: "fill",
                       borderTopRightRadius: 8,
-                      borderTopLeftRadius: 8
+                      borderTopLeftRadius: 8,
                     }}
                     width="240"
                   />
-                  <h3 className="my-4 text-md font-semibold text-center px-2">{book?.title}</h3>
+                  <h3 className="my-4 text-md font-semibold text-center px-2">
+                    {book?.title}
+                  </h3>
                 </CardContent>
               </Card>
             );

@@ -31,13 +31,15 @@ export function BookDetail() {
     bookSelected?.key.split("/").pop()
   );
 
+  console.log('bookSelected', bookSelected);
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-1 mt-12">
       <div className="flex flex-col items-center">
         <Image
           alt="Book cover"
           height="320"
-          src={`https://covers.openlibrary.org/b/olid/${bookSelected?.cover_edition_key}-L.jpg`}
+          src={bookSelected?.covers ? `https://covers.openlibrary.org/b/id/${bookSelected?.covers[0]}-L.jpg` : `https://covers.openlibrary.org/b/olid/${bookSelected?.cover_edition_key}-L.jpg`}
           width="200"
         />
       </div>

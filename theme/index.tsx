@@ -2,28 +2,47 @@
 
 import React from "react";
 import { ConfigProvider } from "antd";
+import { useTheme } from "next-themes";
 const isDarkModeEnabled = window.matchMedia(
   "(prefers-color-scheme: dark)"
 ).matches;
 
-const withTheme = (node: JSX.Element) => (
-  <>
-    <ConfigProvider
-      theme={{
-        components: {
-          Input: {
-            colorTextPlaceholder: isDarkModeEnabled ? "#5c5c5ce" : "black",
+const withTheme = (node: JSX.Element) => {
+  const { theme } = useTheme();
+  return (
+    <>
+      <ConfigProvider
+        theme={{
+          token: {
+            borderRadius: 4,
           },
-        },
-
-        token: {
-          // colorPrimary: "#52c41a",
-        },
-      }}
-    >
-      {node}
-    </ConfigProvider>
-  </>
-);
+          components: {
+            Button: {
+              colorPrimary: "#52c41a",
+              defaultColor: theme === "dark" ? "#fff" : "#373D3F",
+              defaultBg: theme === "dark" ? "#1f2937" : "#fff",
+              defaultHoverBg: theme === "dark" ? "#253142" : "#c5c5c5",
+            },
+          },
+        }}
+      >
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                colorPrimary: "#52c41a",
+                defaultColor: theme === "dark" ? "#fff" : "#373D3F",
+                defaultBg: theme === "dark" ? "#1f2937" : "#fff",
+                defaultHoverBg: theme === "dark" ? "#253142" : "#c5c5c5",
+              },
+            },
+          }}
+        >
+          {node}
+        </ConfigProvider>
+      </ConfigProvider>
+    </>
+  );
+};
 
 export default withTheme;

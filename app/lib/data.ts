@@ -14,8 +14,8 @@ export function getPopularBooks(limit = 6) {
     }
 }
 
-export function getBookDetails(id: string) {
-    const {data, error, isLoading} = useSWR(`https://openlibrary.org${id}.json`, fetcher)
+export function getBookDetails(id: string, query: string | undefined = undefined) {
+    const {data, error, isLoading} = useSWR(`https://openlibrary.org${id}.json?${query}`, fetcher)
 
     return {
         bookDetail: data,
