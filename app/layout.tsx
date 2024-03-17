@@ -1,15 +1,19 @@
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
-import Header from "@/components/Header";
+import Header from "@/components/Header/Header";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ThemeProvider } from "next-themes";
 import ThemeChangerFab from "@/components/Fab";
 import { Montserrat } from "next/font/google";
+import Navbar from "@/components/Navbar/Navbar";
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
+import { signOut } from "./lib/supabase";
 
 const inter = Montserrat({
-  subsets: ['latin'],
-  display: 'swap',
-})
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -17,8 +21,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Bookly",
+  description: "Rate, follow and share your favorite books",
 };
 
 export default async function RootLayout({
@@ -26,13 +30,25 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col items-center">
           <ThemeProvider attribute="class">
-            <Header />
-            <AntdRegistry>{children}</AntdRegistry>
+            <AntdRegistry>
+              <Navbar user={user}/> 
+              {/* {<Header />} */}
+              {children}
+            </AntdRegistry>
             <ThemeChangerFab />
           </ThemeProvider>
         </main>

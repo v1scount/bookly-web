@@ -178,19 +178,21 @@ export const getBookRating = async (book_id: string) => {
 export const getUserReadBooks = async () => {
   let readBooks: any = [];
   try {
-    const { data, error } = await supabase.from("read_books").select("*");
+    const { data, error } : any = await supabase.from("read_books").select("*");
 
     // Create an array of Promises (Axios get requests)
-    const promises = data.map(async (book: any) => {
-      const response = await axios.get(
-        `https://openlibrary.org/works/${book?.book_id}.json`
-      );
-      const responseData = response.data;
-      const obj = {
-        ...responseData,
-      };
-      return obj;
-    });
+    const promises =
+      // data &&
+      data.map(async (book: any) => {
+        const response = await axios.get(
+          `https://openlibrary.org/works/${book?.book_id}.json`
+        );
+        const responseData = response.data;
+        const obj = {
+          ...responseData,
+        };
+        return obj;
+      });
 
     // Wait for all Promises to resolve
     const resolvedBooks = await Promise.all(promises);
@@ -207,7 +209,7 @@ export const getUserReadBooks = async () => {
 export const getUserLikedBooks = async () => {
   let likedBooks: any = [];
   try {
-    const { data, error } = await supabase.from("liked_books").select("*");
+    const { data, error }: any = await supabase.from("liked_books").select("*");
 
     // Create an array of Promises (Axios get requests)
     const promises = data.map(async (book: any) => {
