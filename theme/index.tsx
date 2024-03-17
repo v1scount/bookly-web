@@ -3,10 +3,6 @@
 import React from "react";
 import { ConfigProvider } from "antd";
 import { useTheme } from "next-themes";
-const isDarkModeEnabled = window.matchMedia(
-  "(prefers-color-scheme: dark)"
-).matches;
-
 const withTheme = (node: JSX.Element) => {
   const { theme } = useTheme();
   return (
