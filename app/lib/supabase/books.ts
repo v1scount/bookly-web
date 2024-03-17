@@ -238,7 +238,7 @@ export const getUserLikedBooks = async () => {
 export const getUserToReadBooks = async () => {
   let toReadBooks: any = [];
   try {
-    const { data, error } = await supabase.from("to_read_books").select("*");
+    const { data, error }:any = await supabase.from("to_read_books").select("*");
 
     // Create an array of Promises (Axios get requests)
     const promises = data.map(async (book: any) => {
