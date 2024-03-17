@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { Cross1Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
@@ -6,6 +6,8 @@ import SearchInput from "../search-input";
 import AuthButton from "../AuthButton";
 import { useRouter } from "next/navigation";
 import withTheme from "@/theme";
+import { signOut } from "@/app/lib/supabase";
+import { Button } from "antd";
 
 const Nav = (user: any, signOut: any) => {
   // State to manage the navbar's visibility
@@ -18,13 +20,19 @@ const Nav = (user: any, signOut: any) => {
   };
 
   // Array containing navigation items
-  const navItems = [{ id: 1, text: "Home", href: "/" }];
+  const navItems = [
+    { id: 1, text: "Home", href: "/" },
+    user?.user?.user
+      ? { id: 2, text: "Profile", href: "/profile" }
+      : { id: 2, text: "Login", href: "/login" },
+  ];
 
   //Navigate function to handle navigation
   const navigate = (href: string) => {
     router.push(href);
-  }
+  };
 
+  console.log("user", user);
 
   return (
     <div className="bg-black flex justify-between items-center w-full h-16 mx-auto px-4 text-white">
@@ -33,8 +41,8 @@ const Nav = (user: any, signOut: any) => {
 
       {/* Desktop Navigation */}
       <>
-        <SearchInput />
-        <ul className="hidden ml-5 sm:flex">
+        <ul className="hidden ml-5 items-center sm:flex">
+          <SearchInput />
           {navItems.map((item) => (
             <li
               key={item.id}
@@ -44,18 +52,7 @@ const Nav = (user: any, signOut: any) => {
               {item.text}
             </li>
           ))}
-          {user && (
-            <>
-              <li
-                key="3213121"
-                className="p-4 hover:bg-[#00df9a] rounded-xl m-2 cursor-pointer duration-300 hover:text-black"
-                onClick={() => navigate("/profile")}
-              >
-                Profile
-              </li>
-              <AuthButton user={user}/>
-            </>
-          )}
+          {user.user.user && <AuthButton user={user} />}
         </ul>
       </>
 
@@ -68,8 +65,8 @@ const Nav = (user: any, signOut: any) => {
       <ul
         className={
           nav
-            ? "fixed md:hidden left-0 top-0 w-[60%] h-full border-r border-r-gray-900 bg-[#000300] ease-in-out duration-500"
-            : "ease-in-out w-[60%] duration-500 fixed top-0 bottom-0 left-[-100%]"
+            ? "fixed md:hidden left-0 top-0 w-[60%] h-full border-r border-r-gray-900 bg-[#000300] ease-in-out duration-500 z-10"
+            : "ease-in-out w-[60%] duration-500 fixed top-0 bottom-0 left-[-100%] z-10"
         }
       >
         {/* Mobile Logo */}
@@ -87,6 +84,7 @@ const Nav = (user: any, signOut: any) => {
               {item.text}
             </li>
           ))}
+          {user.user.user && <AuthButton user={user} />}
         </>
       </ul>
     </div>
@@ -96,7 +94,7 @@ const Nav = (user: any, signOut: any) => {
 // export default withTheme(Navbar);
 
 const Navbar = (user: any, signOut: any) => {
-  return withTheme(<Nav user={user} signOut={signOut}/>);
-}
+  return withTheme(<Nav user={user} signOut={signOut} />);
+};
 
 export default Navbar;

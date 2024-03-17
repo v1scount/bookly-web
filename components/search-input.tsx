@@ -66,7 +66,7 @@ export default function SearchInput() {
   };
 
   return (
-    <div className="w-[700px]">
+    <div>
       <Dropdown
         menu={{ items: searchResults }}
         open={searchDropdrown}
@@ -76,7 +76,7 @@ export default function SearchInput() {
           placeholder="Search"
           onSearch={(value) => handleSearch(value)}
           style={{ background: 'white', borderRadius: 4 }}
-          allowClear
+          // allowClear
           onBlur={closeDropdown}
         />
       </Dropdown>
