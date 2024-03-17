@@ -150,7 +150,7 @@ export default function BookActions() {
   }, [plusDirection]);
 
   return (
-    <div className="dark:bg-backgroundDark bg-white p-4 border-2 border-primary dark:border-secondary rounded-lg text-white w-64">
+    <div className="dark:bg-backgroundDark bg-white p-4 border-2 border-primary dark:border-secondary rounded text-white max-w-64 max-h-96">
       <div className="flex justify-between mb-4">
         <div
           onClick={() => changeDirection("book")}

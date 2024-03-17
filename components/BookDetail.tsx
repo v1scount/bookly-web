@@ -6,18 +6,13 @@
  */
 
 import { useAppStore } from "@/app/lib/store";
-import { getBookDetails, getBookRatings } from "@/app/lib/data";
+import { getBookDetails } from "@/app/lib/data";
 import ShowMoreText from "react-show-more-text";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import { AddReview } from "./add-review";
-import { createReview, getBookReviews } from "@/app/lib/supabase/";
+import { createReview } from "@/app/lib/supabase/";
 import DescriptionSkeleton from "./ui/skeletons/description-skeleton";
-import RatingsSkeleton from "./ui/skeletons/ratings-skeleton";
-import { Rate } from "antd";
-import { parseRating } from "@/utils/helpers";
-import Review from "@/components/Reviews/Review";
 import BookActions from "./book-actions";
-import { NumberSchema } from "yup";
 import Image from "next/image";
 import { Skeleton } from "antd";
 
@@ -27,42 +22,45 @@ export function BookDetail() {
 
   const bookSelected = useAppStore((state) => state.bookDetail);
   const { bookDetail, isLoading, isError } = getBookDetails(bookSelected?.key);
-  const { bookRatings, isErrorRatings, isLoadingRatings } = getBookRatings(
-    bookSelected?.key.split("/").pop()
-  );
-
-  console.log('bookSelected', bookSelected);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-1 mt-12">
-      <div className="flex flex-col items-center">
+    <div className="grid grid-cols-1 mt-12 md:grid-cols-3 gap-4 md:gap-8">
+      {/* First column: Cover */}
+      <div className="flex justify-center md:col-span-1">
         <Image
           alt="Book cover"
           height="320"
-          src={bookSelected?.covers ? `https://covers.openlibrary.org/b/id/${bookSelected?.covers[0]}-L.jpg` : `https://covers.openlibrary.org/b/olid/${bookSelected?.cover_edition_key}-L.jpg`}
-          width="200"
+          src={
+            bookSelected?.covers
+              ? `https://covers.openlibrary.org/b/id/${bookSelected?.covers[0]}-L.jpg`
+              : `https://covers.openlibrary.org/b/olid/${bookSelected?.cover_edition_key}-L.jpg`
+          }
+          width="320"
+          style={{
+            borderRadius: ".25rem",
+          }}
         />
       </div>
-      <div className="flex flex-col">
-        <div className="flex flex-col">
-          {isLoading ? (
-            <Skeleton paragraph={{ rows: 1 }} title={false} />
-          ) : (
-            <p className="text-3xl font-bold mr-2 text-black dark:text-white">
-              {bookDetail?.title}
+
+      {/* Second column: Title, author, description */}
+      <div className="md:col-span-1">
+        {isLoading ? (
+          <Skeleton paragraph={{ rows: 1 }} title={false} />
+        ) : (
+          <p className="text-3xl font-bold mr-2 text-black dark:text-white">
+            {bookDetail?.title}
+          </p>
+        )}
+        {isLoading ? (
+          <Skeleton paragraph={{ rows: 1 }} title={false} className="mt-8" />
+        ) : (
+          bookSelected?.author_name?.map((author: string, index: number) => (
+            <p className="text-sm">
+              {author}{" "}
+              {bookSelected?.author_name?.length > index + 1 ? ", " : ""}
             </p>
-          )}
-          {isLoading ? (
-            <Skeleton paragraph={{ rows: 1 }} title={false} className="mt-8" />
-          ) : (
-            bookSelected?.author_name?.map((author: string, index: number) => (
-              <p className="text-sm">
-                {author}{" "}
-                {bookSelected?.author_name?.length > index + 1 ? ", " : ""}
-              </p>
-            ))
-          )}
-        </div>
+          ))
+        )}
         {isLoading ? (
           <div className="flex flex-col flex-1 mt-8 mr-12 items-center">
             <div className="mb-8">
@@ -88,7 +86,9 @@ export function BookDetail() {
           </ShowMoreText>
         )}
       </div>
-      <div className="flex flex-col items-center">
+
+      {/* Third column: Book actions */}
+      <div className="flex justify-center md:col-span-1">
         <BookActions />
       </div>
       <AddReview
